@@ -1,2 +1,2 @@
 # metabase-php-api
-Simple Metabase API wrapper written in PHP
+Simple Metabase API wrapper written in PHP.
