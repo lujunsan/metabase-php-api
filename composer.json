@@ -1,0 +1,24 @@
+{
+  "name": "lujunsan/metabase-php-api",
+  "type": "library",
+  "description": "Metabase API Wrapper",
+  "keywords": ["metabase"],
+  "homepage": "https://github.com/lujunsan/metabase-php-api",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Luis Juncal",
+      "email": "luisjuncaldev@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "lcobucci/jwt": "^3.2",
+    "phpfastcache/phpfastcache": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "lujunsan/Metabase\\": "src"
+    }
+  }
+}
