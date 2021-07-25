@@ -37,13 +37,13 @@ class MetabaseClient {
     private function getSessionToken(string $username, string $password) : string {
         $defaultDriver = 'Files';
         $psr16Adapter = new Psr16Adapter($defaultDriver);
-        // Replace '@' with '_at_' for compliance with phpFastCache safety requisites
-        $cleanUsername = str_replace('@', '_at_', $username);
-        if ($psr16Adapter->has('metabase_token_' . $cleanUsername)) {
-            return $psr16Adapter->get('metabase_token_' . $cleanUsername);
+        // Hash the username and password and use the result as the cache unique identifier
+        $uniqueId = md5($username . $password);
+        if ($psr16Adapter->has('metabase_token_' . $uniqueId)) {
+            return $psr16Adapter->get('metabase_token_' . $uniqueId);
         }
         $sessionToken = $this->generateSessionToken($username, $password);
-        $psr16Adapter->set('metabase_token_' . $cleanUsername, $sessionToken, 7*24*60*60);
+        $psr16Adapter->set('metabase_token_' . $uniqueId, $sessionToken, 7*24*60*60);
         return $sessionToken;
     }
 
