@@ -75,7 +75,7 @@ class MetabaseClient {
      * @param string $endpoint
      * @param string|null $parameters
      * @param string $format
-     * @return mixed|\Psr\Http\Message\StreamInterface
+     * @return mixed
      */
     private function call(string $method, string $endpoint, string $parameters = NULL, string $format = 'json') {
         $guzzleClient = new Client([
