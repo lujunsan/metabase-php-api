@@ -9,10 +9,10 @@ use Phpfastcache\Helper\Psr16Adapter;
 class MetabaseClient {
 
     /** @var string Metabase API base URL */
-    private string $url;
+    private $url;
 
     /** @var string Metabase API authentication token */
-    private string $token;
+    private $token;
 
     /**
      * MetabaseClient constructor.
