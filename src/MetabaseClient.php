@@ -34,7 +34,7 @@ class MetabaseClient {
      * @param string $password
      * @return string
      */
-    private function getSessionToken(string $username, string $password) : string {
+    private function getSessionToken(string $username, string $password) : ?string {
         $defaultDriver = 'Files';
         $psr16Adapter = new Psr16Adapter($defaultDriver);
         // Hash the username and password and use the result as the cache unique identifier
@@ -43,7 +43,9 @@ class MetabaseClient {
             return $psr16Adapter->get('metabase_token_' . $uniqueId);
         }
         $sessionToken = $this->generateSessionToken($username, $password);
-        $psr16Adapter->set('metabase_token_' . $uniqueId, $sessionToken, 7*24*60*60);
+        if (isset($sessionToken)) {
+            $psr16Adapter->set('metabase_token_' . $uniqueId, $sessionToken, 7 * 24 * 60 * 60);
+        }
         return $sessionToken;
     }
 
@@ -54,7 +56,7 @@ class MetabaseClient {
      * @param string $password
      * @return string
      */
-    private function generateSessionToken(string $username, string $password) : string {
+    private function generateSessionToken(string $username, string $password) : ?string {
         $guzzleClient = new Client([
             'base_uri' => $this->url
         ]);
@@ -63,9 +65,13 @@ class MetabaseClient {
         ];
         $data = '{"username": "' . $username . '", "password": "' . $password . '"}';
         $guzzleRequest = new Request('POST', $this->url . '/api/session', $headers, $data);
-        $request = $guzzleClient->send($guzzleRequest);
-        $response = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
-        return $response['id'];
+        $request = $guzzleClient->send($guzzleRequest, ['http_errors' => false]);
+        $status = $request->getStatusCode();
+        if ($status === 200) {
+            $response = json_decode($request->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            return $response['id'];
+        }
+        return NULL;
     }
 
     /**
